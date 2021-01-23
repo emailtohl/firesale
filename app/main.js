@@ -31,9 +31,9 @@ const createWindow = exports.createWindow = () => {
     y = currentWindowY + 10;
   }
 
-  let newWindow = new BrowserWindow({ x, y, show: false });
+  let newWindow = new BrowserWindow({ x, y, show: false, webPreferences: { nodeIntegration: true, enableRemoteModule: true } });
 
-  newWindow.loadURL(`file://${__dirname}/index.html`);
+  newWindow.loadFile(`index.html`);
 
   newWindow.once('ready-to-show', () => {
     newWindow.show();
@@ -72,8 +72,8 @@ const createWindow = exports.createWindow = () => {
   return newWindow;
 };
 
-const getFileFromUser = exports.getFileFromUser = (targetWindow) => {
-  const files = dialog.showOpenDialog(targetWindow, {
+const getFileFromUser = exports.getFileFromUser = async (targetWindow) => {
+  const files = await dialog.showOpenDialog(targetWindow, {
     properties: ['openFile'],
     filters: [
       { name: 'Text Files', extensions: ['txt'] },
@@ -81,7 +81,7 @@ const getFileFromUser = exports.getFileFromUser = (targetWindow) => {
     ]
   });
 
-  if (files) { openFile(targetWindow, files[0]); }
+  if (files && !files.canceled) { openFile(targetWindow, files.filePaths[0]); }
 };
 
 const openFile = exports.openFile = (targetWindow, file) => {
@@ -94,15 +94,18 @@ const openFile = exports.openFile = (targetWindow, file) => {
 };
 
 
-const saveMarkdown = exports.saveMarkdown = (targetWindow, file, content) => {
+const saveMarkdown = exports.saveMarkdown = async (targetWindow, file, content) => {
   if (!file) {
-    file = dialog.showSaveDialog(targetWindow, {
+    const files = await dialog.showSaveDialog(targetWindow, {
       title: 'Save Markdown',
       defaultPath: app.getPath('documents'),
       filters: [
         { name: 'Markdown Files', extensions: ['md', 'markdown'] }
       ]
     });
+    if (!files.canceled) {
+      file = files.filePath;
+    }
   }
 
   if (!file) return;
@@ -111,8 +114,8 @@ const saveMarkdown = exports.saveMarkdown = (targetWindow, file, content) => {
   openFile(targetWindow, file);
 };
 
-const saveHtml = exports.saveHtml = (targetWindow, content) => {
-  const file = dialog.showSaveDialog(targetWindow, {
+const saveHtml = exports.saveHtml = async (targetWindow, content) => {
+  const file = await dialog.showSaveDialog(targetWindow, {
     title: 'Save HTML',
     defaultPath: app.getPath('documents'),
     filters: [
@@ -120,9 +123,9 @@ const saveHtml = exports.saveHtml = (targetWindow, content) => {
     ]
   });
 
-  if (!file) return;
+  if (file.canceled) return;
 
-  fs.writeFileSync(file, content);
+  fs.writeFileSync(file.filePath, content);
 };
 
 const startWatchingFile = (targetWindow, file) => {

@@ -5,13 +5,13 @@
   "description": "Completed code from [Electron in Action](http://bit.ly/electronjs).",
   "main": "app/main.js",
   "dependencies": {
-    "electron": "^1.6.10",
-    "marked": "^0.3.6"
+    "electron": "^v11.2.0",
+    "marked": "^1.2.7"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
     "devtron": "^1.4.0",
-    "electron-packager": "^8.7.1",
+    "electron-packager": "^v11.2.0",
     "eslint": "^3.19.0",
     "eslint-plugin-import": "^2.3.0"
   },

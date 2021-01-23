@@ -1,7 +1,7 @@
 const { remote, ipcRenderer, shell } = require('electron');
 const { Menu } = remote; // A
 const path = require('path');
-const mainProcess = remote.require('./main.js');
+const mainProcess = remote.require('./main');
 const currentWindow = remote.getCurrentWindow();
 
 const marked = require('marked');
