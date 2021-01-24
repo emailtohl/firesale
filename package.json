@@ -5,7 +5,7 @@
   "description": "Completed code from [Electron in Action](http://bit.ly/electronjs).",
   "main": "app/main.js",
   "dependencies": {
-    "electron": "^v11.2.0",
+    "electron": "^11.2.1",
     "marked": "^1.2.7"
   },
   "devDependencies": {
